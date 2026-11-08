@@ -1,0 +1,23 @@
+.header { position: fixed; z-index: 20; inset: 0 0 auto; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 3vw; padding: .8vw 4.3vw; background: rgba(14, 10, 7, .48); -webkit-backdrop-filter: blur(18px) saturate(140%); backdrop-filter: blur(18px) saturate(140%); border-bottom: 1px solid rgba(255, 255, 255, .12); box-shadow: 0 4px 24px #0002; }
+.header__nav { justify-self: center; }
+.header__nav-items { display: flex; align-items: center; justify-content: center; gap: 3.1vw; }
+.header__nav a,.header__nav button { position: relative; white-space: nowrap; font-size: clamp(13px,1vw,20px); font-weight: 700; padding: 7px 0 10px; transition: color .2s ease; }
+.header__nav a::after,.header__nav button::after { content: ''; position: absolute; height: 3px; bottom: 0; inset-inline: 0; background: var(--accent); transform: scaleX(0); transition: transform .2s ease; }
+.header__nav a:focus-visible::after { transform: scaleX(1); }
+@media(hover:hover) {
+ .header__nav a:hover,.header__nav button:hover { color: var(--accent); }
+ .header__nav a:hover::after,.header__nav button:hover::after { transform: scaleX(1); }
+}
+.header__actions { display: flex; gap: 2.2vw; align-items: center; justify-self: end; }
+[data-mobile-menu] { display: none; }
+@media(max-width:1100px) { .header__nav-items { gap: 2.8vw; } .header__actions { gap: 1vw; } }
+@media(max-width:900px) {
+ .header { grid-template-columns: 1fr auto; padding: 12px 20px; gap: 10px; }
+ .header__actions { gap: 5px; }  [data-mobile-menu] { display: grid; }
+ .header__nav { display: none; position: absolute; top: calc(100% + 8px); left: 16px; right: 16px; justify-self: stretch; margin: 0; padding: 18px 24px; background: #130b04f5; border: 1px solid #ffac0038; border-radius: 12px; }
+ .header__nav.is-open { display: block; } .header__nav-items { display: grid; justify-content: stretch; gap: 6px; } .header__nav a,.header__nav button { text-align: left; }
+}
+
+
+.header__nav a.active:not([href="/"]) { color: var(--accent); }
+.header__nav a.active:not([href="/"])::after { transform: scaleX(1); }

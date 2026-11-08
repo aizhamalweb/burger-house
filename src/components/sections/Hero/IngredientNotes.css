@@ -1,0 +1,29 @@
+.ingredient-notes { position: absolute; inset: 0; z-index: 2; opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(-18px); }
+.ingredient-notes__arrows { position: absolute; inset: 0; width: 100%; height: 100%; color: #fff7e9; overflow: visible; }
+.ingredient-notes__arrows > path { fill: none; stroke: currentColor; stroke-width: 1.2; }
+.ingredient-note { position: absolute; display: flex; align-items: center; gap: .55vw; width: 23%; min-height: 5.5vw; padding: .5vw .3vw; }
+.ingredient-note__icon { flex: 0 0 2.6vw; color: #ffad25; filter: drop-shadow(0 0 5px #ff7200a6); }
+.ingredient-note__icon svg { display: block; width: 100%; height: 2.6vw; stroke-width: 1.7; }
+.ingredient-note h2 { margin: 0 0 .25vw; font-size: clamp(11px,1vw,19px); line-height: 1.1; font-weight: 700; }
+.ingredient-note p { font-size: clamp(9px,.78vw,15px); line-height: 1.25; color: #eee7df; }
+.ingredient-note--bun-top { left: 68.5%; top: 16%; }
+.ingredient-note--lettuce { left: 11%; top: 29%; width: 21.5%; }
+.ingredient-note--lettuce .ingredient-note__icon { color: #d2e52e; filter: drop-shadow(0 0 5px #c0d80070); }
+.ingredient-note--tomato { left: 68.5%; top: 39%; }
+.ingredient-note--cheese { left: 11%; top: 49%; width: 21%; }
+.ingredient-note--patty { left: 68.5%; top: 53%; width: 24%; }
+.ingredient-note--sauce { left: 9.5%; top: 64%; width: 23.5%; }
+.ingredient-note--bun-bottom { left: 68.5%; top: 70%; }
+.ingredient-note--lettuce,.ingredient-note--cheese,.ingredient-note--sauce { justify-content: flex-end; }
+@media(max-width:700px) {
+ .ingredient-notes { top: 105px; bottom: auto; height: calc(100svh - 125px); min-height: 490px; transform: translateY(-8px); }
+ .ingredient-note { width: 44%; min-height: 66px; padding: 7px 5px; gap: 5px; }
+ .ingredient-note__icon { flex-basis: 22px; } .ingredient-note__icon svg { height: 24px; }
+ .ingredient-note h2 { font-size: 11px; margin-bottom: 4px; } .ingredient-note p { font-size: 9px; }
+ .ingredient-note--bun-top,.ingredient-note--tomato,.ingredient-note--patty,.ingredient-note--bun-bottom { left: 54%; width: 44%; }
+ .ingredient-note--lettuce,.ingredient-note--cheese,.ingredient-note--sauce { left: 2%; width: 44%; }
+ .ingredient-note--bun-top { top: 2%; } .ingredient-note--lettuce { top: 18%; }
+ .ingredient-note--tomato { top: 33%; } .ingredient-note--cheese { top: 46%; }
+ .ingredient-note--patty { top: 56%; } .ingredient-note--sauce { top: 70%; } .ingredient-note--bun-bottom { top: 83%; }
+ .ingredient-notes__arrows { display: none; }
+}

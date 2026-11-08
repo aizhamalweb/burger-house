@@ -1,0 +1,4 @@
+.home-scene { position: relative; }
+.home-scene > .hero { position: sticky; top: 0; z-index: 0; }
+.home-scene__scroll-space { height: 250vh; height: 250svh; pointer-events: none; }
+.home-scene__menu { position: relative; z-index: 3; min-height: 100svh; box-shadow: 0 -20px 70px #0008; }

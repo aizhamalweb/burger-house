@@ -1,0 +1,5 @@
+.logo { display: flex; align-items: center; gap: 1.1vw; flex-shrink: 0; }
+.logo > svg { width: 3.4vw; height: 2.7vw; color: var(--accent); padding-right: 1vw; border-right: 1px solid var(--accent); box-sizing: content-box; stroke-width: 1.6; }
+.logo > span { display: grid; font-size: clamp(18px,1.5vw,30px); line-height: .9; font-style: italic; font-weight: 950; letter-spacing: -1.5px; }
+.logo b:last-child { color: var(--accent); font-size: 1.13em; }
+@media(max-width:900px) { .logo { gap: 12px; } .logo > svg { width: 30px; height: 30px; padding-right: 12px; } }
