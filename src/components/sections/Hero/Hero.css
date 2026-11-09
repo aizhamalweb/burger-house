@@ -110,7 +110,7 @@
 }
 @media (max-width: 1023px) {
  .hero { padding-top: 0; }
- .hero__media { height: 100svh; height: 100dvh; aspect-ratio: auto; overflow: hidden; }
+ .hero__media { height: 100svh; aspect-ratio: auto; overflow: hidden; }
  .hero__video { object-fit: cover; object-position: center; }
  .hero .ingredient-notes { transform: translateY(-36px); }
  .hero .ingredient-arrow--desktop { display: none; }

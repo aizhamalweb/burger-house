@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 export default function useSlowScroll(pathname) {
  useEffect(() => {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
-  const phoneScreen = window.matchMedia('(max-width: 767px)')
+  const nativeScroll = window.matchMedia('(max-width: 1023px), (pointer: coarse)')
   let frame = 0
   let lastTime = 0
   let current = window.scrollY
@@ -18,7 +18,7 @@ export default function useSlowScroll(pathname) {
    current = target = window.scrollY
   }
   const tick = time => {
-   if (reducedMotion.matches || phoneScreen.matches) { reset(); return }
+   if (reducedMotion.matches || nativeScroll.matches) { reset(); return }
    const delta = lastTime ? Math.min((time - lastTime) / 1000, .05) : 1 / 60
    lastTime = time
    target = clamp(target)
@@ -32,7 +32,7 @@ export default function useSlowScroll(pathname) {
    else { window.scrollTo({ top: target, behavior: 'instant' }); reset() }
   }
   const wheel = event => {
-   if (reducedMotion.matches || phoneScreen.matches || event.ctrlKey || event.metaKey || !event.cancelable || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return
+   if (reducedMotion.matches || nativeScroll.matches || event.ctrlKey || event.metaKey || !event.cancelable || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return
    if (event.target instanceof Element) {
     // Dialogs and nested lists keep their own native scrolling.
     if (event.target.closest('dialog, input, textarea, select, [contenteditable="true"]')) return
@@ -57,22 +57,29 @@ export default function useSlowScroll(pathname) {
   const onKey = event => {
    if (['ArrowUp','ArrowDown','PageUp','PageDown','Home','End',' '].includes(event.key)) reset()
   }
-  phoneScreen.addEventListener('change', reset)
-  window.addEventListener('wheel', wheel, { passive: false })
-  window.addEventListener('scroll', onNativeScroll, { passive: true })
-  window.addEventListener('keydown', onKey)
-  window.addEventListener('pointerdown', reset, { passive: true })
-  window.addEventListener('touchstart', reset, { passive: true })
-  window.addEventListener('blur', reset)
+  // Touch devices never receive a non-passive wheel handler or a custom scroll loop.
+  const setListeners = enabled => {
+   const method = enabled ? 'addEventListener' : 'removeEventListener'
+   window[method]('wheel', wheel, { passive: false })
+   window[method]('scroll', onNativeScroll, { passive: true })
+   window[method]('keydown', onKey)
+   window[method]('pointerdown', reset, { passive: true })
+   window[method]('touchstart', reset, { passive: true })
+   window[method]('blur', reset)
+  }
+  const updateMode = () => {
+   reset()
+   setListeners(false)
+   if (!nativeScroll.matches && !reducedMotion.matches) setListeners(true)
+  }
+  nativeScroll.addEventListener('change', updateMode)
+  reducedMotion.addEventListener('change', updateMode)
+  updateMode()
   return () => {
    reset()
-   phoneScreen.removeEventListener('change', reset)
-   window.removeEventListener('wheel', wheel)
-   window.removeEventListener('scroll', onNativeScroll)
-   window.removeEventListener('keydown', onKey)
-   window.removeEventListener('pointerdown', reset)
-   window.removeEventListener('touchstart', reset)
-   window.removeEventListener('blur', reset)
+   setListeners(false)
+   nativeScroll.removeEventListener('change', updateMode)
+   reducedMotion.removeEventListener('change', updateMode)
   }
  }, [pathname])
 }

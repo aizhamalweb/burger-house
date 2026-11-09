@@ -19,7 +19,7 @@ export default function MainLayout() {
    if (!section) return
    const headerHeight = document.querySelector('.header')?.getBoundingClientRect().height || 0
    const top = hash === '#home' ? 0 : section.getBoundingClientRect().top + window.scrollY - headerHeight - 12
-   window.scrollTo({ top: Math.max(0, top), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })
+   window.scrollTo({ top: Math.max(0, top), behavior: window.matchMedia('(max-width: 1023px), (pointer: coarse), (prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })
   })
   return () => cancelAnimationFrame(frame)
  }, [pathname, hash, key])

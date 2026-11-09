@@ -2,3 +2,6 @@
 .motion--waiting { opacity: 0; translate: 0 28px; }
 .motion--tilt { transform: perspective(1000px) rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg)); transform-style: preserve-3d; }
 @media(prefers-reduced-motion:reduce) { .motion,.motion--waiting,.motion--tilt { opacity: 1; translate: none; transform: none; transition: none; } }
+@media (hover: none), (pointer: coarse) {
+ .motion--tilt { transform: none; transform-style: flat; }
+}

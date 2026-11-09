@@ -1,6 +1,6 @@
 ﻿import { useRef, useState, useSyncExternalStore } from 'react'
 import burgerVideo from '../../../assets/videos/bg-video.mp4'
-import phoneVideo from '../../../assets/videos/bg-video_phone.mp4'
+import phoneVideo from '../../../assets/videos/bg-video_phone-scroll.mp4'
 import useScrollVideo from './hooks/useScrollVideo.js'
 
 const phoneQuery = '(max-width: 1023px)'
