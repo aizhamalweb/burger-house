@@ -24,7 +24,8 @@ export default function IngredientNotes() {
  return <div className="ingredient-notes" role="group" aria-label="Состав бургера">
   <svg className="ingredient-notes__arrows" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
    <defs><marker id="ingredient-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M1 1 9 5 1 9" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></marker></defs>
-   {['M685 125Q631 125 574 162', 'M325 206Q367 206 412 235', 'M685 265Q632 260 580 297', 'M318 325Q367 313 417 333', 'M685 346Q632 339 584 367', 'M330 411Q370 396 418 415', 'M685 450Q636 465 585 450'].map(d => <path key={d} d={d} markerEnd="url(#ingredient-arrow)" />)}
+   {['M685 125Q631 125 574 162', 'M325 206Q367 206 412 235', 'M685 265Q632 260 580 297', 'M318 325Q367 313 417 333', 'M685 346Q632 339 584 367', 'M330 411Q370 396 418 415', 'M685 450Q636 465 585 450'].map(d => <path className="ingredient-arrow--desktop" key={d} d={d} markerEnd="url(#ingredient-arrow)" />)}
+   {['M635 125Q607 135 574 162', 'M365 206Q390 217 412 235', 'M635 265Q607 275 580 297', 'M370 325Q395 322 417 333', 'M635 346Q610 352 584 367', 'M375 411Q396 405 418 415', 'M635 450Q610 457 585 450'].map(d => <path className="ingredient-arrow--phone" key={d} d={d} markerEnd="url(#ingredient-arrow)" />)}
   </svg>
   {notes.map(note => <article className={`ingredient-note ingredient-note--${note.id}`} key={note.id}>
    <span className="ingredient-note__icon" aria-hidden="true">{note.icon}</span>

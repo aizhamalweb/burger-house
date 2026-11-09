@@ -10,3 +10,10 @@
 @keyframes footer-shimmer { from { translate: -40% 0; opacity: .45; } to { translate: 100% 0; opacity: .85; } }
 @media(max-width:600px) { .footer { padding: 22px 20px 16px; }.footer__row { flex-wrap: wrap; gap: 20px; }.footer nav { order: 3; width: 100%; gap: 22px; }.footer__up { margin-left: auto; }.footer__bottom { margin-top: 16px; font-size: 10px; } }
 @media(prefers-reduced-motion:reduce) { .footer__hologram { animation: none; }.footer nav a,.footer__up { transition: none; } }
+@media (max-width: 1023px) {
+ .footer__row { flex-wrap: wrap; gap: 16px; }
+ .footer nav { flex-wrap: wrap; gap: 8px 20px; }
+ .footer nav a { display: inline-flex; align-items: center; min-height: 44px; }
+ .footer__up { width: 44px; height: 44px; }
+}
+@media (max-width: 600px) { .footer__bottom { flex-wrap: wrap; gap: 8px; } }

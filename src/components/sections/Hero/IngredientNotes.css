@@ -27,3 +27,4 @@
  .ingredient-note--patty { top: 56%; } .ingredient-note--sauce { top: 70%; } .ingredient-note--bun-bottom { top: 83%; }
  .ingredient-notes__arrows { display: none; }
 }
+.ingredient-arrow--phone { display: none; }

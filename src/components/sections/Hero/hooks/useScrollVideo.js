@@ -3,7 +3,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { progressToTime } from '../../../../utils/videoUtils.js'
 gsap.registerPlugin(ScrollTrigger)
-export default function useScrollVideo(videoRef, sectionRef) {
+export default function useScrollVideo(videoRef, sectionRef, source) {
  useEffect(() => {
   const video = videoRef.current
   const section = sectionRef.current
@@ -87,6 +87,15 @@ export default function useScrollVideo(videoRef, sectionRef) {
    })
    sync(trigger)
   }
+  // Container changes (including orientation changes) must update scroll distances.
+  let refreshFrame = 0
+  const resizeObserver = new ResizeObserver(() => {
+   cancelAnimationFrame(refreshFrame)
+   refreshFrame = requestAnimationFrame(() => ScrollTrigger.refresh())
+  })
+  resizeObserver.observe(section)
+  const composition = section.querySelector('.hero__composition')
+  if (composition) resizeObserver.observe(composition)
   const onError = () => { stop(); if (menu) menu.style.removeProperty('visibility') }
   video.addEventListener('loadedmetadata', initialize)
   video.addEventListener('seeked', schedule)
@@ -95,6 +104,8 @@ export default function useScrollVideo(videoRef, sectionRef) {
   video.addEventListener('error', onError)
   if (video.readyState >= 1) initialize()
   return () => {
+   resizeObserver.disconnect()
+   cancelAnimationFrame(refreshFrame)
    stop()
    video.removeEventListener('loadedmetadata', initialize)
    video.removeEventListener('seeked', schedule)
@@ -106,5 +117,5 @@ export default function useScrollVideo(videoRef, sectionRef) {
    initialElements.forEach(element => { element.style.removeProperty('opacity'); element.style.removeProperty('visibility') })
    ;[benefits, endActions, steam].forEach(element => { if (element) { element.style.removeProperty('opacity'); element.style.removeProperty('visibility') } })
   }
- }, [videoRef, sectionRef])
+ }, [videoRef, sectionRef, source])
 }

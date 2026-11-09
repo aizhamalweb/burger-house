@@ -13,24 +13,41 @@ export default function Offers({ page = false }) {
  const Title = page ? 'h1' : 'h2'
  const sectionRef = useRef(null)
  useEffect(() => {
-  const context = gsap.context(() => {
-   const cards = gsap.utils.toArray('.offer-card')
+  const section = sectionRef.current
+  const stage = section.querySelector('.offers__stage')
+  const stack = section.querySelector('.offers__stack')
+  const media = gsap.matchMedia()
+  media.add({
+   phone: '(max-width: 1023px)',
+   larger: '(min-width: 1024px)',
+  }, context => {
+   const phone = context.conditions.phone
+   const cards = gsap.utils.toArray('.offer-card', section)
    const timeline = gsap.timeline({ scrollTrigger: {
-    trigger: sectionRef.current,
+    trigger: phone ? stage : section,
     start: 'top top',
-    end: 'bottom bottom',
+    end: phone ? () => '+=' + Math.max(cards[0].offsetHeight * 3, window.innerHeight) : 'bottom bottom',
+    pin: phone ? stage : false,
+    pinSpacing: true,
+    anticipatePin: 1,
     scrub: true,
     invalidateOnRefresh: true,
    } })
-   gsap.set(cards.slice(1), { yPercent: 115, opacity: 1, visibility: 'hidden' })
+   const entryPosition = {
+    yPercent: phone ? 0 : 115,
+    // Once pinned, the stack's offset is its distance from the viewport top.
+    y: phone ? () => Math.max(window.innerHeight - stack.offsetTop + 24, stack.offsetHeight * 1.15) : 0,
+   }
+   gsap.set(cards.slice(1), { ...entryPosition, opacity: 1, visibility: 'hidden' })
    timeline.set(cards[1], { visibility: 'visible' }, .15)
-    .to(cards[1], { yPercent: 0, duration: .3, ease: 'none' }, .15)
+    .fromTo(cards[1], entryPosition, { y: 0, yPercent: phone ? 50 : 0, duration: .3, ease: 'none', immediateRender: false }, .15)
     .set(cards[2], { visibility: 'visible' }, .6)
-    .to(cards[2], { yPercent: 0, duration: .3, ease: 'none' }, .6)
+    .fromTo(cards[2], entryPosition, { y: 0, yPercent: phone ? 100 : 0, duration: .3, ease: 'none', immediateRender: false }, .6)
     .to({}, { duration: .1 }, .9)
-  }, sectionRef)
-  return () => context.revert()
+  }, section)
+  return () => media.revert()
  }, [])
+
  return <section id="offers" className="offers" ref={sectionRef} aria-labelledby="offers-title">
   <div className="offers__stage">
   <div className="offers__heading">
