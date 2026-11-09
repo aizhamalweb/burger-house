@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 export default function useSlowScroll(pathname) {
  useEffect(() => {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+  const phoneScreen = window.matchMedia('(max-width: 767px)')
   let frame = 0
   let lastTime = 0
   let current = window.scrollY
@@ -17,7 +18,7 @@ export default function useSlowScroll(pathname) {
    current = target = window.scrollY
   }
   const tick = time => {
-   if (reducedMotion.matches) { reset(); return }
+   if (reducedMotion.matches || phoneScreen.matches) { reset(); return }
    const delta = lastTime ? Math.min((time - lastTime) / 1000, .05) : 1 / 60
    lastTime = time
    target = clamp(target)
@@ -31,7 +32,7 @@ export default function useSlowScroll(pathname) {
    else { window.scrollTo({ top: target, behavior: 'instant' }); reset() }
   }
   const wheel = event => {
-   if (reducedMotion.matches || event.ctrlKey || event.metaKey || !event.cancelable || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return
+   if (reducedMotion.matches || phoneScreen.matches || event.ctrlKey || event.metaKey || !event.cancelable || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return
    if (event.target instanceof Element) {
     // Dialogs and nested lists keep their own native scrolling.
     if (event.target.closest('dialog, input, textarea, select, [contenteditable="true"]')) return
@@ -56,6 +57,7 @@ export default function useSlowScroll(pathname) {
   const onKey = event => {
    if (['ArrowUp','ArrowDown','PageUp','PageDown','Home','End',' '].includes(event.key)) reset()
   }
+  phoneScreen.addEventListener('change', reset)
   window.addEventListener('wheel', wheel, { passive: false })
   window.addEventListener('scroll', onNativeScroll, { passive: true })
   window.addEventListener('keydown', onKey)
@@ -64,6 +66,7 @@ export default function useSlowScroll(pathname) {
   window.addEventListener('blur', reset)
   return () => {
    reset()
+   phoneScreen.removeEventListener('change', reset)
    window.removeEventListener('wheel', wheel)
    window.removeEventListener('scroll', onNativeScroll)
    window.removeEventListener('keydown', onKey)

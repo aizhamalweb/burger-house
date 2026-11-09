@@ -61,10 +61,24 @@ export default function useScrollVideo(videoRef, sectionRef, source) {
     })
    }
   }
-  let trigger, frame = 0, target = 0
-  const seek = () => { frame = 0; if (!video.seeking && Math.abs(video.currentTime - target) > .015) video.currentTime = target }
+  let trigger, frame = 0, target = 0, lastSeekTime = 0
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+  const seek = timestamp => {
+   frame = 0
+   // Let the decoder finish its current frame before requesting another one.
+   if (video.seeking || video.readyState < 2) return
+   const distance = target - video.currentTime
+   if (Math.abs(distance) <= .015) { lastSeekTime = 0; updateNotes(); return }
+   const elapsed = lastSeekTime ? Math.min((timestamp - lastSeekTime) / 1000, .5) : 1 / 60
+   lastSeekTime = timestamp
+   const eased = distance * (1 - Math.exp(-20 * elapsed))
+   const maxStep = Math.max(.04, video.duration * .035)
+   const step = Math.max(-maxStep, Math.min(maxStep, eased))
+   // Slow decoders catch up directly instead of building a queue of stale frames.
+   video.currentTime = reducedMotion.matches || elapsed > .08 || Math.abs(distance) > video.duration * .15 || Math.abs(distance) < .04 ? target : video.currentTime + step
+  }
   const schedule = () => { if (!frame) frame = requestAnimationFrame(seek) }
-  const stop = () => { trigger?.kill(); cancelAnimationFrame(frame); frame = 0 }
+  const stop = () => { trigger?.kill(); cancelAnimationFrame(frame); frame = 0; lastSeekTime = 0 }
   const initialize = () => {
    stop()
    frame = 0
@@ -98,6 +112,8 @@ export default function useScrollVideo(videoRef, sectionRef, source) {
   if (composition) resizeObserver.observe(composition)
   const onError = () => { stop(); if (menu) menu.style.removeProperty('visibility') }
   video.addEventListener('loadedmetadata', initialize)
+  video.addEventListener('loadeddata', schedule)
+  video.addEventListener('canplay', schedule)
   video.addEventListener('seeked', schedule)
   video.addEventListener('seeked', updateNotes)
   video.addEventListener('timeupdate', updateNotes)
@@ -108,6 +124,8 @@ export default function useScrollVideo(videoRef, sectionRef, source) {
    cancelAnimationFrame(refreshFrame)
    stop()
    video.removeEventListener('loadedmetadata', initialize)
+   video.removeEventListener('loadeddata', schedule)
+   video.removeEventListener('canplay', schedule)
    video.removeEventListener('seeked', schedule)
    video.removeEventListener('seeked', updateNotes)
    video.removeEventListener('timeupdate', updateNotes)
